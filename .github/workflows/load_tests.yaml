@@ -54,9 +54,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install clients
+        run: |
+          curl -Lo oracle-client.zip https://download.oracle.com/otn_software/linux/instantclient/1911000/instantclient-basic-linux.x64-19.11.0.0.0dbru.zip
+          unzip oracle-client.zip
+          export LD_LIBRARY_PATH=$PWD/instantclient_19_11
+          python -m pip install cx_Oracle psycopg2-binary mysql-connector-python
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
           export PYTHONPATH=$PWD/src/python
           cd test/python
-          python -m pip install cx_Oracle psycopg2-binary mysql-connector-python
           python tests_loading.py
