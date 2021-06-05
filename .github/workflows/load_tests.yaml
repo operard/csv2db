@@ -62,6 +62,7 @@ jobs:
           python -m pip install cx_Oracle psycopg2-binary mysql-connector-python
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
+          export LD_LIBRARY_PATH=$PWD/instantclient_19_11
           export PYTHONPATH=$PWD/src/python
           cd test/python
           python tests_loading.py
