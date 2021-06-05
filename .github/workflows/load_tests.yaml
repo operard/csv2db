@@ -1,0 +1,61 @@
+name: load_tests
+on: [push, pull_request]
+jobs:
+  load_tests:
+    strategy:
+      matrix:
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.x' ]
+
+    runs_on: ubuntu-latest
+
+    # Service containers to run with "load_tests" job
+    services:
+
+      # Postgres service
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: LetsTest1
+        # Set health checks to wait until Postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+      
+      # Oracle service
+      oracle:
+        # Docker Hub image
+        image: gvenzl/oracle-xe:11-slim
+        # Provide passwords and other environment variables to container
+        env:
+          ORACLE_RANDOM_PASSWORD: true
+          APP_USER: test
+          APP_USER_PASSWORD: LetsTest1
+        # Forward Oracle port
+        ports:
+          - 1521:1521
+        # Provide healthcheck script
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 20s
+          --health-timeout 10s
+          --health-retries 10
+    
+    # Run tests
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run Python test on version ${{ matrix.python-version }}
+        run: |
+          export PYTHONPATH=$PWD/src/python
+          cd test/python
+          python tests_loading.py
