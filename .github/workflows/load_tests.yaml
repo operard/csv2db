@@ -2,11 +2,12 @@ name: load_tests
 on: [push, pull_request]
 jobs:
   db_load_tests:
-    runs_on: ubuntu-latest
     strategy:
       matrix:
         python-version: [ '3.6', '3.7', '3.8', '3.9', '3.x' ]
-    
+
+    runs-on: ubuntu-latest
+
     # Service containers to run with "load_tests" job
     services:
 
