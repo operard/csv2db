@@ -43,9 +43,18 @@ jobs:
         # Provide healthcheck script
         options: >-
           --health-cmd healthcheck.sh
-          --health-interval 20s
-          --health-timeout 10s
+          --health-interval 10s
+          --health-timeout 5s
           --health-retries 10
+ 
+      # MySQL service
+      mysql:
+        image: mysql
+        env:
+          MYSQL_ROOT_PASSWORD: LetsTest1
+        ports:
+          - 3306:3306
+    
     
     # Run tests
     steps:
