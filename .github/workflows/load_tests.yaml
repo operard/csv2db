@@ -58,4 +58,5 @@ jobs:
         run: |
           export PYTHONPATH=$PWD/src/python
           cd test/python
+          python -m pip install cx_Oracle psycopg2-binary mysql-connector-python
           python tests_loading.py
