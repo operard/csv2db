@@ -54,8 +54,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: LetsTest1
         ports:
           - 3306:3306
-    
-    
+
     # Run tests
     steps:
       - uses: actions/checkout@v2
@@ -69,6 +68,9 @@ jobs:
           unzip oracle-client.zip
           export LD_LIBRARY_PATH=$PWD/instantclient_19_11
           python -m pip install cx_Oracle psycopg2-binary mysql-connector-python
+      - name: Setup test databases
+        run: |
+          docker ps -a
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
           export LD_LIBRARY_PATH=$PWD/instantclient_19_11
