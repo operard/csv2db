@@ -31,7 +31,7 @@ jobs:
       # Oracle service
       oracle:
         # Docker Hub image
-        image: gvenzl/oracle-xe:11-slim
+        image: gvenzl/oracle-xe:slim
         # Provide passwords and other environment variables to container
         env:
           ORACLE_RANDOM_PASSWORD: true
@@ -70,7 +70,7 @@ jobs:
           python -m pip install cx_Oracle psycopg2-binary mysql-connector-python
       - name: Setup test databases
         run: |
-          docker ps -a
+          docker exec
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
           export LD_LIBRARY_PATH=$PWD/instantclient_19_11
