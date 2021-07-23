@@ -17,7 +17,9 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
+          POSTGRES_USER: TEST
           POSTGRES_PASSWORD: LetsTest1
+          POSTGRES_DB: TEST
         # Set health checks to wait until Postgres has started
         options: >-
           --health-cmd pg_isready
@@ -35,8 +37,9 @@ jobs:
         # Provide passwords and other environment variables to container
         env:
           ORACLE_RANDOM_PASSWORD: true
-          APP_USER: test
+          APP_USER: TEST
           APP_USER_PASSWORD: LetsTest1
+          ORACLE_DATABASE: TEST
         # Forward Oracle port
         ports:
           - 1521:1521
@@ -51,7 +54,9 @@ jobs:
       mysql:
         image: mysql
         env:
+          MYSQL_USER: TEST
           MYSQL_ROOT_PASSWORD: LetsTest1
+          MYSQL_DATABASE: TEST
         ports:
           - 3306:3306
 
@@ -70,7 +75,7 @@ jobs:
           python -m pip install cx_Oracle psycopg2-binary mysql-connector-python
       - name: Setup test databases
         run: |
-          docker exec
+          docker ps -a
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
           export LD_LIBRARY_PATH=$PWD/instantclient_19_11
