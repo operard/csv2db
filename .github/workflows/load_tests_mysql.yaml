@@ -1,0 +1,39 @@
+name: load_tests_mysql
+on: [push, pull_request]
+jobs:
+  db_load_tests:
+    strategy:
+      matrix:
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.x' ]
+
+    runs-on: ubuntu-latest
+
+    # Service containers to run with "load_tests" job
+    services:
+      # MySQL service
+      mysql:
+        image: mysql
+        env:
+          MYSQL_USER: TEST
+          MYSQL_ROOT_PASSWORD: LetsTest1
+          MYSQL_DATABASE: TEST
+        ports:
+          - 3306:3306
+
+    # Run tests
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install database driver
+        run: python -m pip install mysql-connector-python
+      - name: Setup test databases
+        run: |
+          docker ps -a
+      - name: Run Python test on version ${{ matrix.python-version }}
+        run: |
+          export PYTHONPATH=$PWD/src/python
+          cd test/python
+          python tests_loading.py
