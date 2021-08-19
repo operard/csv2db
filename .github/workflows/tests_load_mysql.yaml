@@ -53,7 +53,8 @@ jobs:
       - name: Setup test database
         run: |
           docker run -d --name mysql-container -p 3306:3306 -e MYSQL_USER=test -e MYSQL_PASSWORD=LetsTest1 -e MYSQL_DATABASE=test mysql
-          sleep 5
+          echo "Sleep"
+          sleep 10
           docker exec -i mysql-container mysql -u test -pLetsTest1 -D test < test/resources/test_env/create_test_tables.sql
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
