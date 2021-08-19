@@ -30,16 +30,16 @@ jobs:
     runs-on: ubuntu-latest
 
     # Service container to run with "load_tests_mysql" job
-    # services:
+    services:
       # MySQL service
-      # mysql-db:
-        # image: mysql
-        # env:
-          # MYSQL_USER: test
-          # MYSQL_PASSWORD: LetsTest1
-          # MYSQL_DATABASE: test
-        # ports:
-          # - 3306:3306
+      mysql-db:
+        image: mysql
+        env:
+          MYSQL_USER: test
+          MYSQL_PASSWORD: LetsTest1
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
 
     # Run tests
     steps:
