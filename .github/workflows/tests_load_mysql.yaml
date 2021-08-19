@@ -36,7 +36,7 @@ jobs:
         image: mysql
         env:
           MYSQL_USER: test
-          MYSQL_ROOT_PASSWORD: LetsTest1
+          MYSQL_PASSWORD: LetsTest1
           MYSQL_DATABASE: test
         ports:
           - 3306:3306
