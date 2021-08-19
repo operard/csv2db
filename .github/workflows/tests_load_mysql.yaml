@@ -53,7 +53,7 @@ jobs:
       - name: Setup test database
         run: |
           docker ps -a
-          docker exec -ti mysql-db "mysql -u test -pLetsTest1 -D test" < test/resources/test_env/create_test_tables.sql
+          docker exec -ti `docker ps -q` "mysql -u test -pLetsTest1 -D test" < test/resources/test_env/create_test_tables.sql
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
           export PYTHONPATH=$PWD/src/python
