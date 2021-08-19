@@ -30,16 +30,16 @@ jobs:
     runs-on: ubuntu-latest
 
     # Service container to run with "load_tests_mysql" job
-    services:
+    # services:
       # MySQL service
-      mysql-db:
-        image: mysql
-        env:
-          MYSQL_USER: test
-          MYSQL_PASSWORD: LetsTest1
-          MYSQL_DATABASE: test
-        ports:
-          - 3306:3306
+      # mysql-db:
+        # image: mysql
+        # env:
+          # MYSQL_USER: test
+          # MYSQL_PASSWORD: LetsTest1
+          # MYSQL_DATABASE: test
+        # ports:
+          # - 3306:3306
 
     # Run tests
     steps:
@@ -52,13 +52,9 @@ jobs:
         run: python -m pip install mysql-connector-python
       - name: Setup test database
         run: |
-          docker ps -a
-          docker version
-          docker ps -q
-          DOCKER_ID=`docker ps -q`
-          echo "Docker id: $DOCKER_ID"
-          docker ps -q
-          docker exec -i $DOCKER_ID mysql -u test -pLetsTest1 -D test < test/resources/test_env/create_test_tables.sql
+          docker run -d --name mysql-container -p 3306:3306 -e MYSQL_USER=test -e MYSQL_PASSWORD=LetsTest1 -e MYSQL_DATABASE=test
+          sleep 5
+          docker exec -i mysql-container mysql -u test -pLetsTest1 -D test < test/resources/test_env/create_test_tables.sql
       - name: Run Python test on version ${{ matrix.python-version }}
         run: |
           export PYTHONPATH=$PWD/src/python
