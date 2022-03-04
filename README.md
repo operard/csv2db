@@ -77,7 +77,7 @@ optional arguments:
   --debug               Debug output.
   -t TABLE, --table TABLE
                         The table name to use.
-  -o {oracle,mysql,postgres,sqlserver,db2}, --dbtype {oracle,mysql,postgres,sqlserver,db2}
+  -o {oracle,adb,mysql,postgres,sqlserver,db2}, --dbtype {oracle,adb,mysql,postgres,sqlserver,db2}
                         The database type.
   -u USER, --user USER  The database user to load data into.
   -p PASSWORD, --password PASSWORD
@@ -86,7 +86,7 @@ optional arguments:
                         more secure method of providing a password.
   -m HOST, --host HOST  The host name on which the database is running on.
   -n PORT, --port PORT  The port on which the database is listening. If not
-                        passed on the default port will be used (Oracle: 1521,
+                        passed on the default port will be used (Oracle: 1521, adb: 1521,
                         MySQL: 3306, PostgreSQL: 5432, SQL Server: 1433, DB2:
                         50000).
   -d DBNAME, --dbname DBNAME
@@ -284,6 +284,7 @@ In order for `csv2db` to work you will have to install the appropriate database 
 The following drivers are being used, all available on [pypi.org](https://pypi.org/):
 
 * Oracle: [cx-Oracle](https://pypi.org/project/cx-Oracle/) version 7.0.0+
+* ADB: [cx-Oracle](https://pypi.org/project/cx-Oracle/) version 7.0.0+
 * MySQL: [mysql-connector-python](https://pypi.org/project/mysql-connector-python/) version 8.0.13+
 * PostgreSQL: [psycopg2-binary](https://pypi.org/project/psycopg2-binary/) version 2.7.6.1+
 * SQL Server: [pymssql](https://pypi.org/project/pymssql/) version 2.1.4+
