@@ -292,6 +292,10 @@ def generate_statement(col_map):
         values = ":" + ", :".join(col_map)
         if cfg.direct_path:
             append_hint = " /*+ APPEND_VALUES */"
+    elif cfg.db_type == f.DBType.ADB.value:
+        values = ":" + ", :".join(col_map)
+        if cfg.direct_path:
+            append_hint = " /*+ APPEND_VALUES */"
     elif cfg.db_type == f.DBType.DB2.value:
         values = ("?," * len(col_map))[:-1]
     else:

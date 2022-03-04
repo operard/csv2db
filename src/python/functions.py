@@ -38,6 +38,7 @@ import config as cfg
 class DBType(Enum):
     """Database type enumeration."""
     ORACLE = "oracle"
+    ADB = "adb"
     MYSQL = "mysql"
     POSTGRES = "postgres"
     SQLSERVER = "sqlserver"
@@ -229,6 +230,10 @@ def get_db_connection(db_type, user, password, host, port, db_name):
                                      password,
                                      host + ":" + port + "/" + db_name,
                                      encoding="UTF-8", nencoding="UTF-8")
+        elif db_type == DBType.ADB.value:
+            import cx_Oracle
+            #os.environ['TNS_ADMIN'] = '/home/opc/adb'
+            conn = cx_Oracle.connect(user, password, db_name, encoding="UTF-8", nencoding="UTF-8")
         elif db_type == DBType.MYSQL.value:
             import mysql.connector
             conn = mysql.connector.connect(
@@ -286,6 +291,8 @@ def get_default_db_port(db_type):
         The default port
     """
     if db_type == DBType.ORACLE.value:
+        return "1521"
+    elif db_type == DBType.ADB.value:
         return "1521"
     elif db_type == DBType.MYSQL.value:
         return "3306"
