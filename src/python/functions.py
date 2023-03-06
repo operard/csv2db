@@ -34,6 +34,8 @@ import csv
 
 import config as cfg
 
+import cx_Oracle
+import getpass
 
 class DBType(Enum):
     """Database type enumeration."""
@@ -118,6 +120,7 @@ def find_all_files(pattern):
     []
         List of files.
     """
+    verbose(pattern)
     if os.path.isdir(pattern):
         # If path is directory find all CSV files, compressed or uncompressed
         pattern += "/*.csv*"
@@ -198,7 +201,6 @@ def get_exception_details():
     traceback_str = "Traceback:\n" + ''.join(traceback.format_tb(tb))
     return "{0}: {1}".format(exception_type.__name__, exception_message), traceback_str
 
-
 def get_db_connection(db_type, user, password, host, port, db_name):
     """ Connects to the database.
 
@@ -222,17 +224,49 @@ def get_db_connection(db_type, user, password, host, port, db_name):
     conn
         A database connection
     """
+    return get_db_connection(db_type, user, password, host, port, db_name, None)
+
+
+def get_db_connection(db_type, user, password, host, port, db_name, instantclient):
+    """ Connects to the database.
+
+    Parameters
+    ----------
+    db_type : str
+        The database type
+    user : str
+        The database user
+    password : str
+        The database user password
+    host : str
+        The database host or ip address
+    port : str
+        The port to connect to
+    db_name : str
+        The database or service name
+    instantclient : str
+        The path where Oracle instant client has been installed
+
+    Returns
+    -------
+    conn
+        A database connection
+    """
 
     try:
         if db_type == DBType.ORACLE.value:
-            import cx_Oracle
+            init_db_connection("D:\oracle\instantclient_21_9")
             conn = cx_Oracle.connect(user,
                                      password,
                                      host + ":" + port + "/" + db_name,
                                      encoding="UTF-8", nencoding="UTF-8")
         elif db_type == DBType.ADB.value:
-            import cx_Oracle
             #os.environ['TNS_ADMIN'] = '/home/opc/adb'
+            #init_db_connection("D:\oracle\instantclient_21_9")
+            if sys.platform.startswith("win"):
+                instant_client_dir = r"{0}".format(instantclient)
+                #instant_client_dir = r"D:\oracle\instantclient_21_9"
+                cx_Oracle.init_oracle_client(lib_dir=instant_client_dir)			
             conn = cx_Oracle.connect(user, password, db_name, encoding="UTF-8", nencoding="UTF-8")
         elif db_type == DBType.MYSQL.value:
             import mysql.connector

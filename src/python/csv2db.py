@@ -26,7 +26,7 @@ import sys
 
 import config as cfg
 import functions as f
-
+import os
 
 def run(cmd):
     """Runs csv2db.
@@ -44,8 +44,8 @@ def run(cmd):
         The exit code.
     """
     args = parse_arguments(cmd)
-
-    # Set verbose and debug output flags
+    
+	# Set verbose and debug output flags
     cfg.verbose = args.verbose
     if args.debug:
         cfg.verbose = True
@@ -65,7 +65,8 @@ def run(cmd):
 
     # Find all files
     f.verbose("Finding file(s).")
-    file_names = f.find_all_files(args.file)
+    #file_names = f.find_all_files(args.file)
+    file_names = [r"{0}".format(args.file)]
     f.verbose("Found {0} file(s).".format(len(file_names)))
     # Exit program if no files found.
     if len(file_names) == 0:
@@ -114,7 +115,13 @@ def run(cmd):
         f.debug({"dbtype": args.dbtype, "user": args.user, "host": args.host, "port": args.port, "dbname": args.dbname})
 
         try:
-            cfg.conn = f.get_db_connection(cfg.db_type, args.user, args.password, args.host, args.port, args.dbname)
+            if sys.platform.startswith("win"):
+                # If password hasn't been specified via parameter, prompt for it
+                if args.instantclient is None:
+                    args.instantclient = input("Oracle DB Instant Client Path:\n")
+                cfg.conn = f.get_db_connection(cfg.db_type, args.user, args.password, args.host, args.port, args.dbname, args.instantclient)
+            else:
+                cfg.conn = f.get_db_connection(cfg.db_type, args.user, args.password, args.host, args.port, args.dbname)
         except Exception as err:
             exception, tb_str = f.get_exception_details()
             f.error("Error connecting to the database: {0}".format(exception))
@@ -193,7 +200,7 @@ def load_files(file_names):
     for file_name in file_names:
         print()
         print("Loading file {0}".format(file_name))
-        f.debug("Opening file handler for '{0}'".format(file_name))
+        f.verbose("Opening file handler for '{0}'".format(file_name))
         with f.open_file(file_name) as file:
             try:
                 read_and_load_file(file)
@@ -381,6 +388,8 @@ def parse_arguments(cmd):
                              help="The quote character on which a string won't be split.")
     parser_load.add_argument("-a", "--directpath", action="store_true", default=False,
                              help="Execute a direct path INSERT load operation (Oracle only).")
+    parser_load.add_argument("-ic", "--instantclient", default=None,
+                                 help="Path where Oracle Instant Client has been installed.")
 
     return parser.parse_args(cmd)
 
